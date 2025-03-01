@@ -38,6 +38,15 @@ Whether location icon is animated between updates
   _defaults to:_ `true`
 
   
+### coordinates
+
+```tsx
+Array
+```
+New coordinates to update the location icon
+
+
+  
 ### children
 
 ```tsx
@@ -120,29 +129,6 @@ Whether location icon is visible
   _defaults to:_ `true`
 [User Location Render Mode](../examples/UserLocation/UserLocationRenderMode)
   
-### headingIconSize
-
-```tsx
-Value<number, ['zoom', 'feature']> | undefined
-```
-Size of the heading icon
-
-
-  
-### styles
-
-```tsx
-type Styles = {
-  pulse: CircleLayerStyle; /* FIX ME NO DESCRIPTION */
-  background: CircleLayerStyle; /* FIX ME NO DESCRIPTION */
-  foreground: CircleLayerStyle; /* FIX ME NO DESCRIPTION */
-}
-```
-Custom styles for the circle layers
-
-  _defaults to:_ `{  pulse: { circleRadius: 15, circleColor: mapboxBlue },  background: { circleRadius: 9, circleColor: '#fff' },  foreground: { circleRadius: 6, circleColor: mapboxBlue },}`
-
-  
 
 
 
@@ -151,7 +137,7 @@ Custom styles for the circle layers
 ## methods
 ### setLocationManager({ running }: { running?: boolean })
 
-Whether to start or stop listening to the locationManager<br/><br/>Notice, that listening will start automatically when<br/>either `onUpdate` or `visible` are set
+Whether to start or stop listening to the locationManager<br/><br/>Notice, that listening will start automatically when<br/>either onUpdate or visible are set
 
 #### arguments
 | Name | Type | Required | Description  |

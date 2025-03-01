@@ -7516,7 +7516,7 @@
     "methods": [
       {
         "name": "setLocationManager",
-        "docblock": "Whether to start or stop listening to the locationManager\n\nNotice, that listening will start automatically when\neither `onUpdate` or `visible` are set\n\n@async\n@param {Object} running - Object with key `running` and `boolean` value\n@return {Promise<void>}",
+        "docblock": "Whether to start or stop listening to the locationManager\n\nNotice, that listening will start automatically when\neither onUpdate or visible are set\n\n@async\n@param {Object} running - Object with key running and boolean value\n@return {Promise<void>}",
         "modifiers": [
           "async"
         ],
@@ -7539,7 +7539,7 @@
             ]
           }
         },
-        "description": "Whether to start or stop listening to the locationManager\n\nNotice, that listening will start automatically when\neither `onUpdate` or `visible` are set",
+        "description": "Whether to start or stop listening to the locationManager\n\nNotice, that listening will start automatically when\neither onUpdate or visible are set",
         "examples": []
       },
       {
@@ -7570,6 +7570,13 @@
         "type": "boolean",
         "default": "true",
         "description": "Whether location icon is animated between updates"
+      },
+      {
+        "name": "coordinates",
+        "required": false,
+        "type": "Array",
+        "default": "none",
+        "description": "New coordinates to update the location icon"
       },
       {
         "name": "children",
@@ -7632,45 +7639,6 @@
         "type": "boolean",
         "default": "true",
         "description": "Whether location icon is visible"
-      },
-      {
-        "name": "headingIconSize",
-        "required": false,
-        "type": "Value<number, ['zoom', 'feature']> \\| undefined",
-        "default": "none",
-        "description": "Size of the heading icon"
-      },
-      {
-        "name": "styles",
-        "required": false,
-        "type": {
-          "name": "shape",
-          "value": [
-            {
-              "name": "pulse",
-              "required": false,
-              "type": "CircleLayerStyle",
-              "default": "none",
-              "description": "FIX ME NO DESCRIPTION"
-            },
-            {
-              "name": "background",
-              "required": false,
-              "type": "CircleLayerStyle",
-              "default": "none",
-              "description": "FIX ME NO DESCRIPTION"
-            },
-            {
-              "name": "foreground",
-              "required": false,
-              "type": "CircleLayerStyle",
-              "default": "none",
-              "description": "FIX ME NO DESCRIPTION"
-            }
-          ]
-        },
-        "default": "{  pulse: { circleRadius: 15, circleColor: mapboxBlue },  background: { circleRadius: 9, circleColor: '#fff' },  foreground: { circleRadius: 6, circleColor: mapboxBlue },}",
-        "description": "Custom styles for the circle layers"
       }
     ],
     "fileNameWithExt": "UserLocation.tsx",

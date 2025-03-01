@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
 
-import locationManager from '../modules/location/locationManager';
-import { type Location } from '../modules/location/locationManager';
 import { CircleLayerStyle } from '../Mapbox';
-import { Value } from '../utils/MapboxStyles';
+import locationManager, {
+  type Location,
+} from '../modules/location/locationManager';
 
 import Annotation from './Annotation';
 import CircleLayer from './CircleLayer';
@@ -36,33 +36,25 @@ const layerStyles: Record<'normal', Record<string, CircleLayerStyle>> = {
 const normalIcon = (
   showsUserHeadingIndicator?: boolean,
   heading?: number | null,
-  headingIconSize?: Value<number, ['zoom', 'feature']> | undefined,
-  styles?: Record<string, CircleLayerStyle>,
 ): ReactElement[] => [
   <CircleLayer
     key="mapboxUserLocationPulseCircle"
     id="mapboxUserLocationPulseCircle"
-    style={{ ...layerStyles.normal.pulse, ...styles?.pulse }}
+    style={layerStyles.normal.pulse}
   />,
   <CircleLayer
     key="mapboxUserLocationWhiteCircle"
     id="mapboxUserLocationWhiteCircle"
-    style={{ ...layerStyles.normal.background, ...styles?.background }}
+    style={layerStyles.normal.background}
   />,
   <CircleLayer
     key="mapboxUserLocationBlueCircle"
     id="mapboxUserLocationBlueCircle"
     aboveLayerID="mapboxUserLocationWhiteCircle"
-    style={{ ...layerStyles.normal.foreground, ...styles?.foreground }}
+    style={layerStyles.normal.foreground}
   />,
   ...(showsUserHeadingIndicator && typeof heading === 'number'
-    ? [
-        HeadingIndicator({
-          heading,
-          headingIconSize,
-          key: 'mapboxUserLocationHeadingIndicator',
-        }),
-      ]
+    ? [HeadingIndicator({ heading, key: 'mapboxUserLocationHeadingIndicator' })]
     : []),
 ];
 
@@ -87,6 +79,11 @@ type Props = {
    * Whether location icon is animated between updates
    */
   animated?: boolean;
+
+  /**
+   * New coordinates to update the location icon
+   */
+  coordinates?: number[];
 
   /**
    * Custom location icon of type mapbox-gl-native components
@@ -130,20 +127,6 @@ type Props = {
    * Whether location icon is visible
    */
   visible?: boolean;
-
-  /**
-   * Size of the heading icon
-   */
-  headingIconSize?: Value<number, ['zoom', 'feature']> | undefined;
-
-  /**
-   * Custom styles for the circle layers
-   */
-  styles?: {
-    pulse?: CircleLayerStyle;
-    background?: CircleLayerStyle;
-    foreground?: CircleLayerStyle;
-  };
 };
 
 type UserLocationState = {
@@ -160,11 +143,6 @@ class UserLocation extends React.Component<Props, UserLocationState> {
     requestsAlwaysUse: false,
     minDisplacement: 0,
     renderMode: UserLocationRenderMode.Normal,
-    styles: {
-      pulse: { circleRadius: 15, circleColor: mapboxBlue },
-      background: { circleRadius: 9, circleColor: '#fff' },
-      foreground: { circleRadius: 6, circleColor: mapboxBlue },
-    },
   };
 
   constructor(props: Props) {
@@ -223,10 +201,10 @@ class UserLocation extends React.Component<Props, UserLocationState> {
    * Whether to start or stop listening to the locationManager
    *
    * Notice, that listening will start automatically when
-   * either `onUpdate` or `visible` are set
+   * either onUpdate or visible are set
    *
    * @async
-   * @param {Object} running - Object with key `running` and `boolean` value
+   * @param {Object} running - Object with key running and boolean value
    * @return {Promise<void>}
    */
   async setLocationManager({ running }: { running?: boolean }) {
@@ -280,26 +258,24 @@ class UserLocation extends React.Component<Props, UserLocationState> {
   }
 
   _renderNative() {
-    const { androidRenderMode, showsUserHeadingIndicator, styles } = this.props;
+    const { androidRenderMode, showsUserHeadingIndicator } = this.props;
 
     const props = {
       androidRenderMode,
       iosShowsUserHeadingIndicator: showsUserHeadingIndicator,
-      styles,
     };
     return <LocationPuck {...props} />;
   }
 
   render() {
-    const { heading, coordinates } = this.state;
+    const { heading, coordinates: defaultCoordinates } = this.state;
     const {
       children,
       visible,
       showsUserHeadingIndicator,
       onPress,
       animated,
-      headingIconSize,
-      styles,
+      coordinates,
     } = this.props;
 
     if (!visible) {
@@ -319,19 +295,10 @@ class UserLocation extends React.Component<Props, UserLocationState> {
         id="mapboxUserLocation"
         animated={animated}
         onPress={onPress}
-        coordinates={coordinates}
-        style={{
-          iconRotate: heading,
-          ...styles,
-        }}
+        coordinates={coordinates || defaultCoordinates}
+        style={{ iconRotate: heading }}
       >
-        {children ||
-          normalIcon(
-            showsUserHeadingIndicator,
-            heading,
-            headingIconSize,
-            styles,
-          )}
+        {children || normalIcon(showsUserHeadingIndicator, heading)}
       </Annotation>
     );
   }
